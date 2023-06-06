@@ -1,0 +1,69 @@
+
+.nav{
+
+    width:50%;
+    height: auto;
+    margin:10%
+
+  }
+  body{
+    background-color:rgb(241, 144, 122);
+  }
+  .container{
+    padding: 4rem;
+  }
+ 
+  ul {
+    margin: 1%;
+    padding: 1%;
+  
+    overflow: hidden;
+  list-style: none;
+    background-color:rgb(241, 144, 122);
+   
+  }
+  
+  li {
+    padding: 1rem;
+    float: left;
+    padding-left: 4rem;
+  }
+  
+  li a {
+    display: block;
+    color:white;
+    text-align: center;
+    padding: 1rem;
+    font-size:18px;
+    margin-left:20px;
+    text-decoration:wavy;
+
+  }
+  
+  li a:hover {
+    background-color:rgba(87, 110, 255, 0.923);
+   height: auto;
+   padding: 1rem;
+    border-radius: 0.8rem;
+  }
+
+  .container
+  {
+     align-content: center;
+  }
+
+  .studentname{
+  
+    text-align: center;
+    color:black;
+  }
+
+  .course{
+    
+    text-align: center;
+    color:black;
+
+  }
+  .project{
+    margin-left: 40px;
+  }

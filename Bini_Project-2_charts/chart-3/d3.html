@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../../main.css">
+        <title>D3 Heat Map</title>
+    </head>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="/Bini_Project-2_charts/chart-3/d3.html">Heat Map</a></li>
+                <li><a href="/Bini_Project-2_charts/chart-4/d3_ridgeLine.html">Ridge Line Graph </a></li>
+                <li><a href="/Dhairya_Project-2_charts/chart-1/index.html">Column chart</a></li>
+                <li><a href="/Dhairya_Project-2_charts/chart-2/index.html">Bar Chart</a></li>
+                <li><a href="/Mira_Project-2_charts/pie.html">Pie chart</a></li>
+                <li><a href="/Mira_Project-2_charts/line.html">Line Chart</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <body>
+        <div id="my_dataviz"></div>
+        <div>
+            <svg id="my_datavizlegend" height=300 width=700></svg>
+        </div>
+        <!-- Load d3.js -->
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script>
+            // select the svg 
+            var svg = d3.select("#my_datavizlegend")
+
+            // Handmade legend
+            svg.append("circle").attr("cx", 200).attr("cy", 130).attr("r", 6).style("fill", "#B22200")
+            svg.append("text").attr("x", 220).attr("y", 130).text("Users action or clicks in an E-commerce digital platform").style("font-size", "15px").attr("alignment-baseline", "middle")
+
+            // set the dimensions and margins 
+            var margin = { top: 30, right: 90, bottom: 30, left: 100 },
+                width = 650 - margin.left - margin.right,
+                height = 650 - margin.top - margin.bottom;
+
+            // append the svg object 
+            var svg = d3.select("#my_dataviz")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
+
+            // Labels of row and columns
+            var myGroups = ["A", "B", "C", "D", "E"]
+            var myVars = ["Add to cart", "Add to favorites", "Go back", "Order Now", "See reviews"]
+
+            // Build X scales and axis:
+            var x = d3.scaleBand()
+                .range([0, width])
+                .domain(myGroups)
+                .padding(0.01);
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x))
+
+            // Build X scales and axis:
+            var y = d3.scaleBand()
+                .range([height, 0])
+                .domain(myVars)
+                .padding(0.01);
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            // Build color scale
+            var myColor = d3.scaleLinear()
+                .range(["white", "#B22200"])
+                .domain([1, 100])
+
+            //Read the data
+            d3.csv("heatMap.csv", function (data) {
+
+                // create a tooltip
+                var tooltip = d3.select("#my_dataviz")
+                    .append("div")
+                    .style("opacity", 0)
+                    .attr("class", "tooltip")
+                    .style("background-color", "white")
+                    .style("border", "solid")
+                    .style("border-width", "1px")
+                    .style("border-radius", "5px")
+                    .style("padding", "5px")
+                    .style("width", "250px")
+
+                // Three function that change the tooltip when user hover / move / leave a cell
+                var mouseover = function (d) {
+                    tooltip.style("opacity", 1)
+                }
+                var mousemove = function (d) {
+                    tooltip
+                        .html("The exact value of<br>this cell is: " + d.value)
+                        .style("left", (d3.mouse(this)[0] + 70) + "px")
+                        .style("top", (d3.mouse(this)[1]) + "px")
+                }
+                var mouseleave = function (d) {
+                    tooltip.style("opacity", 0)
+                }
+
+                // add the squares
+                svg.selectAll()
+                    .data(data, function (d) { return d.group + ':' + d.variable; })
+                    .enter()
+                    .append("rect")
+                    .attr("x", function (d) { return x(d.group) })
+                    .attr("y", function (d) { return y(d.variable) })
+                    .attr("width", x.bandwidth())
+                    .attr("height", y.bandwidth())
+                    .style("fill", function (d) { return myColor(d.value) })
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave)
+            })
+        </script>
+    </body>
+</html>
